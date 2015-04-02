@@ -1,0 +1,8 @@
+$ cat .gitignore
+bin/
+gen/
+pages/
+.classpath
+.project
+proguard-project.txt
+project.properties
