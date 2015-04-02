@@ -19,6 +19,7 @@
             android:id="@+id/username"
             android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
+        	android:textSize="20sp"
         	android:hint="username">
         	<requestFocus />
        	</EditText>
@@ -28,6 +29,7 @@
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:inputType="textPassword"
+        	android:textSize="20sp"
         	android:hint="password"
         	android:layout_marginTop="10dp" />
    		
@@ -35,6 +37,7 @@
    		    android:id="@+id/registration_button"
    		    android:layout_width="fill_parent"
    		    android:layout_height="wrap_content"
+   		    android:textSize="20sp"
    		    android:text="Регистрация"
    		    android:layout_marginTop="10dp" />
 
@@ -42,7 +45,8 @@
    		    android:id="@+id/opendoor_button"
    		    android:layout_width="fill_parent"
    		    android:layout_height="wrap_content"
-   		    android:text="Войти без стука"
+   		    android:textSize="20sp"
+   		    android:text="          Войти без стука          "
    		    android:layout_marginTop="10dp" />
    		
    </LinearLayout>
