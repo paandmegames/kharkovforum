@@ -4,9 +4,24 @@
     tools:context="com.gmail.paandmegames.kharkovforum.MainActivity" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"/>
+        <item
+        android:id="@+id/action_my_cabinet"
+        android:orderInCategory="1"
+        android:title="@string/action_my_cabinet"
+        app:showAsAction="never"/>
+            <item
+        android:id="@+id/action_notes"
+        android:orderInCategory="2"
+        android:title="@string/action_notes"
+        app:showAsAction="never"/>
+                <item
+        android:id="@+id/action_authorization"
+        android:orderInCategory="3"
+        android:title="@string/action_authorization"
         app:showAsAction="never"/>
 
 </menu>

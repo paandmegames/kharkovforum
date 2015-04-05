@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">Харьков Форум</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_authorization">Авторизоваться</string>
+    <string name="action_my_cabinet">Мой кабинет</string>
+    <string name="action_notes">Дневники</string>
 
 </resources>

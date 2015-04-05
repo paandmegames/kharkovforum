@@ -9,14 +9,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-public class RequestInstance {
+public class RequestHelper {
 	
-	private static RequestInstance instance;
+	private static RequestHelper instance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private static Context mCtx;
 
-    private RequestInstance(Context context) {
+    private RequestHelper(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
@@ -37,9 +37,9 @@ public class RequestInstance {
         });
     }
 
-    public static synchronized RequestInstance getInstance(Context context) {
+    public static synchronized RequestHelper getInstance(Context context) {
         if (instance == null) {
-            instance = new RequestInstance(context);
+            instance = new RequestHelper(context);
         }
         return instance;
     }
