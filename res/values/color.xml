@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="menu_pressed" type="color">#9e9e9e</item>
+    
+    <item name="menu" type="color">#bdbdbd</item>
+
+</resources>

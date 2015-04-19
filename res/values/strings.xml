@@ -3,8 +3,22 @@
 
     <string name="app_name">Харьков Форум</string>
     <string name="action_search">Поиск</string>
-    <string name="action_authorization">Авторизоваться</string>
-    <string name="action_my_cabinet">Мой кабинет</string>
-    <string name="action_notes">Дневники</string>
+
+    
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
+    <string-array name="screen_array">
+        <item>Мой кабинет</item>
+        <item>Чат</item>
+        <item>Дневники</item>
+        <item>Справка</item>
+	<item>Группы</item>
+	<item>Сообщество</item>
+	<item>Полезные ссылки</item>
+	<item>Новые сообщения</item>
+	<item>Навигация</item>
+	<item>Выход</item>
+    </string-array>
 
 </resources>

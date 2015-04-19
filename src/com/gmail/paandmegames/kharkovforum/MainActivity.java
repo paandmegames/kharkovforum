@@ -1,181 +1,186 @@
 package com.gmail.paandmegames.kharkovforum;
 
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.http.client.HttpClient;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.jsoup.nodes.Element;
-
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HttpClientStack;
-import com.android.volley.toolbox.HttpStack;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.app.ActionBar;
-import android.app.ActionBar.TabListener;
-import android.app.Fragment;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
-	
-	private CreateCats parser = null;
-	
-
-
-	private static final String TAG = MainActivity.class.getSimpleName();
-    
-	
-	
-    private boolean first_run = false;
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
 
     
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-        final ActionBar bar = getActionBar();
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO, ActionBar.DISPLAY_USE_LOGO);
-		
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-		
-		final TextView resultView = (TextView) findViewById(R.id.result_text);
-	
-		//this.deleteDatabase("KharkovForum.db");
-
-		dbHelper = new DBHelper(this);
-		db = dbHelper.getReadableDatabase();
-		Cursor c = db.rawQuery("select name from sqlite_master where type = 'table'", null);
-
-		if(c.getCount() == 1) {
-			Toast.makeText(this, "Создается база данных, подождите", Toast.LENGTH_LONG).show();
-			first_run = true;
-			sendRequest("http://www.kharkovforum.com");
-			return;
-		}
-
-		dbHelper.close();	
+    
+        mTitle = mDrawerTitle = getTitle();
         
-		if(findViewById(R.id.fragment_content) != null) {
-			if(savedInstanceState != null) {
-				return;
-			}
-			
-			CatsFragment page = new CatsFragment();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-			//page.setArguments(getIntent().getExtras());
-			
-			getSupportFragmentManager().beginTransaction()
-				.add(R.id.fragment_content, page).commit();
-		}
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new MenuAdapter(this));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setCustomView(R.layout.actionbar_icon); 
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this, /* host Activity */
+                mDrawerLayout, /* DrawerLayout object */
+                //R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open, /* "open drawer" description */
+                R.string.drawer_close /* "close drawer" description */
+                ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                
+                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+
+            	supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        
+        // Initialize the first fragment when the application first loads.
+        if (savedInstanceState == null) {
+            // Update the main content by replacing fragments
+            Fragment fragment = new TabBuilder.TabView();  
+     
+            // Insert the fragment by replacing any existing fragment
+            if (fragment != null) {
+            	FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, fragment).commit();
+
+            } else {
+                // Error
+                Log.e(this.getClass().getName(), "Error. Fragment is not created");
+            }
+        }
+
 
 	}
 
-	
-	private void sendRequest(String url) {
 
-		Network network = new BasicNetwork(new HurlStack());
-		
-		RequestQueue mRequestQueue;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-		// Instantiate the cache
-		Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+         // Handle action buttons
+        switch(item.getItemId()) {
+        case R.id.action_search:
+            // Show toast about click.
+        	Toast.makeText(this, R.string.action_search, Toast.LENGTH_SHORT).show();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    
+    /* The click listener for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //selectItem(position);
+        }
+    }
 
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+        // Update the main content by replacing fragments
+        Fragment fragment = MenuBuilder.createFragment(position);  
+ 
+        // Insert the fragment by replacing any existing fragment
+        if (fragment != null) {
+        	FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment).commit();
+ 
+            // Highlight the selected item, update the title, and close the drawer
+    	    mDrawerList.setItemChecked(position, true);
+    	    //setTitle(mScreenTitles[position]);
+    	    mDrawerLayout.closeDrawer(mDrawerList);
+        } else {
+            // Error
+            Log.e(this.getClass().getName(), "Error. Fragment is not created");
+        }
+    }
+    
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
 
-		// Instantiate the RequestQueue with the cache and network.
-		mRequestQueue = new RequestQueue(cache, network);
-
-		// Start the queue
-		mRequestQueue.start();
-
-		// Formulate the request and handle the response.
-		StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-		        new Response.Listener<String>() {
-		    
-			@Override
-		    public void onResponse(String response) {
-		    	
-				Log.d(TAG, String.valueOf(response.length()));
-				if(first_run) new CreateCats(MainActivity.this).execute(response);
-
-		    }
-		},
-		    new Response.ErrorListener() {
-		        @Override
-		        public void onErrorResponse(VolleyError error) {
-		        	//mTextView.setText("That didn't work!");
-
-		    }
-		});
-
-		// Add the request to the RequestQueue.
-		mRequestQueue.add(stringRequest);
-	}
-
-	
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		switch (id) { 
-			case R.id.action_authorization:
-				break;
-			case R.id.action_my_cabinet:
-				break;
-			case R.id.action_search:
-				break;
-			case R.id.action_notes:
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+    
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 }

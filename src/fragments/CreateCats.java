@@ -1,4 +1,4 @@
-package com.gmail.paandmegames.kharkovforum;
+package fragments;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.gmail.paandmegames.kharkovforum.DBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -78,8 +80,8 @@ public class CreateCats extends AsyncTask<String, Void, Exception>{
     		
     	} else {  //Success
 
-    		context.getSupportFragmentManager().beginTransaction().add(R.id.fragment_content, 
-    				new CatsFragment()).commit();
+    //		context.getSupportFragmentManager().beginTransaction().add(R.id.fragment_content, 
+    //				new CatsFragment()).commit();
     		
     		new CreateSubcats(context).execute(doc);
     		

@@ -1,12 +1,23 @@
 package com.gmail.paandmegames.kharkovforum;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 public class RequestHelper {
@@ -15,6 +26,7 @@ public class RequestHelper {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private static Context mCtx;
+    public int deep = 0;
 
     private RequestHelper(Context context) {
         mCtx = context;
@@ -60,5 +72,10 @@ public class RequestHelper {
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }
+    
+    public void reset() {
+    	deep = 0;
+    }
+
 }
 

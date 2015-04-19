@@ -1,4 +1,6 @@
-package com.gmail.paandmegames.kharkovforum;
+package fragments;
+
+import com.gmail.paandmegames.kharkovforum.DBHelper;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,8 +1,10 @@
-package com.gmail.paandmegames.kharkovforum;
+package fragments;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Document;
+
+import com.gmail.paandmegames.kharkovforum.DBHelper;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;

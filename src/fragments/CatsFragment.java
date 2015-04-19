@@ -1,7 +1,9 @@
-package com.gmail.paandmegames.kharkovforum;
+package fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gmail.paandmegames.kharkovforum.DBHelper;
 
 
 
@@ -60,8 +62,8 @@ public class CatsFragment extends ListFragment {
 
 			//page.setArguments(getIntent().getExtras());
 			
-			getActivity().getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragment_content, page).commit();
+		//	getActivity().getSupportFragmentManager().beginTransaction()
+		//		.replace(R.id.fragment_content, page).commit();
         }
     
 
