@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -43,40 +45,45 @@ public class MainActivity extends ActionBarActivity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setCustomView(R.layout.actionbar_icon); 
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setLogo(R.drawable.ic_launcher);
+        setSupportActionBar(toolbar); 
         
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
-                //R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+                toolbar, /* nav drawer icon to replace 'Up' caret */
                 R.string.drawer_open, /* "open drawer" description */
                 R.string.drawer_close /* "close drawer" description */
                 ) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                
+            	super.onDrawerClosed(view);
+
                 supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-
+            	super.onDrawerOpened(drawerView);
             	supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true); 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setCustomView(R.layout.actionbar_icon); 
+        //getSupportActionBar().setDisplayShowCustomEnabled(true);
         
         // Initialize the first fragment when the application first loads.
         if (savedInstanceState == null) {
             // Update the main content by replacing fragments
-            Fragment fragment = new TabBuilder.TabView();  
+            Fragment fragment = new PageBuilder.TabView();  
      
             // Insert the fragment by replacing any existing fragment
             if (fragment != null) {
@@ -134,29 +141,14 @@ public class MainActivity extends ActionBarActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //selectItem(position);
+            selectItem(position);
         }
     }
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
-        // Update the main content by replacing fragments
-        Fragment fragment = MenuBuilder.createFragment(position);  
- 
-        // Insert the fragment by replacing any existing fragment
-        if (fragment != null) {
-        	FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit();
- 
-            // Highlight the selected item, update the title, and close the drawer
-    	    mDrawerList.setItemChecked(position, true);
-    	    //setTitle(mScreenTitles[position]);
-    	    mDrawerLayout.closeDrawer(mDrawerList);
-        } else {
-            // Error
-            Log.e(this.getClass().getName(), "Error. Fragment is not created");
-        }
+    	final WebView w = (WebView)findViewById(R.id.webView);
+        PageBuilder.sendRequest(PageBuilder.getMenuURL(position), getApplicationContext(), w);  
     }
     
     @Override
